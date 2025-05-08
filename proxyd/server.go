@@ -588,12 +588,12 @@ func (s *Server) handleBatchRPC(ctx context.Context, reqs []json.RawMessage, isL
 }
 
 func (s *Server) HandleWS(w http.ResponseWriter, r *http.Request) {
+	log.Info("received WS connection", "req_id", GetReqID(r.Context()))
+
 	ctx := s.populateContext(w, r)
 	if ctx == nil {
 		return
 	}
-
-	log.Info("received WS connection", "req_id", GetReqID(ctx))
 
 	clientConn, err := s.upgrader.Upgrade(w, r, nil)
 	if err != nil {
