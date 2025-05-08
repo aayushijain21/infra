@@ -231,6 +231,7 @@ func (s *Server) WSListenAndServe(host string, port int) error {
 	hdlr := mux.NewRouter()
 	hdlr.HandleFunc("/", s.HandleWS)
 	hdlr.HandleFunc("/{authorization}", s.HandleWS)
+	hdlr.HandleFunc("/healthz", s.HandleHealthz).Methods("GET")
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
 	})
