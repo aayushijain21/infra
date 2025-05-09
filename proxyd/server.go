@@ -229,6 +229,7 @@ func (s *Server) RPCListenAndServe(host string, port int) error {
 func (s *Server) WSListenAndServe(host string, port int) error {
 	s.srvMu.Lock()
 	hdlr := mux.NewRouter()
+	hdlr.HandleFunc("/healthz", s.HandleHealthz).Methods("GET")
 	hdlr.HandleFunc("/", s.HandleWS)
 	hdlr.HandleFunc("/{authorization}", s.HandleWS)
 	c := cors.New(cors.Options{
@@ -592,7 +593,7 @@ func (s *Server) HandleWS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Info("received WS connection", "req_id", GetReqID(ctx))
+	log.Info("received WS connection", "req_id", GetReqID(r.Context()))
 
 	clientConn, err := s.upgrader.Upgrade(w, r, nil)
 	if err != nil {
