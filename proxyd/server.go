@@ -229,9 +229,9 @@ func (s *Server) RPCListenAndServe(host string, port int) error {
 func (s *Server) WSListenAndServe(host string, port int) error {
 	s.srvMu.Lock()
 	hdlr := mux.NewRouter()
+	hdlr.HandleFunc("/healthz", s.HandleHealthz).Methods("GET")
 	hdlr.HandleFunc("/", s.HandleWS)
 	hdlr.HandleFunc("/{authorization}", s.HandleWS)
-	hdlr.HandleFunc("/healthz", s.HandleHealthz).Methods("GET")
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
 	})
